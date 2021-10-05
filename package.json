@@ -6,7 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "parcel index.html",
-    "benchmark": "ts-node src/index.ts"
+    "benchmark:yoga:asm:initial": "ts-node src/yoga/asm/initial.ts",
+    "benchmark:yoga:asm:update": "ts-node src/yoga/asm/update.ts",
+    "benchmark:yoga:wasm:initial": "ts-node src/yoga/wasm/initial.ts",
+    "benchmark:yoga:wasm:update": "ts-node src/yoga/wasm/update.ts",
+    "benchmark:taitank:wasm:initial": "ts-node src/taitank/wasm/initial.ts",
+    "benchmark:taitank:wasm:update": "ts-node src/taitank/wasm/update.ts"
   },
   "author": "",
   "license": "ISC",
