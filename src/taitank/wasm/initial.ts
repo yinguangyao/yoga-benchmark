@@ -1,9 +1,10 @@
-import Taitank from "../../lib/taitank/taitank_wasm";
+import loadTaitankWasm from "../../lib/taitank";
 import BenchMark from "benchmark";
 import BeautifyBenchMark from "beautify-benchmark";
 
-(async () => {
+export default async function run(onCycle?: (target: any) => void, onComplete?: () => void) {
   const suite = new BenchMark.Suite();
+  const Taitank = await loadTaitankWasm();
   suite
     .add("300*300", function () {
       const node = Taitank.TaitankNodeCreate();
@@ -449,12 +450,12 @@ import BeautifyBenchMark from "beautify-benchmark";
     })
     .on("cycle", function (event: any) {
       BeautifyBenchMark.add(event.target);
+      onCycle?.(event.target);
     })
     .on("complete", function () {
       BeautifyBenchMark.log();
+      onComplete?.();
     })
     // run async
     .run({ async: true });
-
-  // 每次运行完要销毁，不然会报节点超出上限
-})();
+}

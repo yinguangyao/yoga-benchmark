@@ -1,8 +1,11 @@
-import Yoga from "yoga-layout-wasm";
+import Yoga from "yoga-layout-wasm/asm";
 import BenchMark from "benchmark";
 import BeautifyBenchMark from "beautify-benchmark";
 
-(async () => {
+export default async function run(
+  onCycle?: (target: any) => void,
+  onComplete?: () => void
+) {
   const yoga = await Yoga.init();
   const node = yoga.Node.create();
   let leaf: typeof node | null = null;
@@ -78,22 +81,22 @@ import BeautifyBenchMark from "beautify-benchmark";
   const suite = new BenchMark.Suite();
   suite
     .add("20*20*20*20 update", function () {
-        leaf.setPadding(yoga.EDGE_LEFT, 10);
-        leaf.setWidth(20);
-        node.calculateLayout(
-            yoga.UNIT_UNDEFINED,
-            yoga.UNIT_UNDEFINED,
-            yoga.DIRECTION_LTR
-          );
+      leaf.setPadding(yoga.EDGE_LEFT, 10);
+      leaf.setWidth(20);
+      node.calculateLayout(
+        yoga.UNIT_UNDEFINED,
+        yoga.UNIT_UNDEFINED,
+        yoga.DIRECTION_LTR
+      );
     })
     .on("cycle", function (event: any) {
       BeautifyBenchMark.add(event.target);
+      onCycle?.(event.target);
     })
     .on("complete", function () {
       BeautifyBenchMark.log();
+      onComplete?.();
     })
     // run async
     .run({ async: true });
-
-  // 每次运行完要销毁，不然会报节点超出上限
-})();
+}
